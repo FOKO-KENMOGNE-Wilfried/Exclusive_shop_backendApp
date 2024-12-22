@@ -1,10 +1,12 @@
 package com.exclusive.exclusive.entity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale.Category;
 
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @Entity
 @Table(name = "product")
 public class Product {
@@ -20,8 +22,11 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderProduct> orderProduct = new ArrayList<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     @Column(nullable = false)
     private double price;
@@ -32,72 +37,41 @@ public class Product {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
-    private boolean like;
+    // utilities methods
 
-    // Constructoe, getter and setters, and other methods...
-
-    /**
-     * To get tht product Id
-     * @return id
+     /**
+     * To add a like
+     * @param like
      */
-    public Long getId(){
-        return id;
+     public void addLike(Like like) {
+        likes.add(like);
+        like.setProduct(this);
     }
 
     /**
-     * To get tht product Name
-     * @return name
+     * To remove a like
+     * @param like
      */
-    public String getName() {
-        return name;
+    public void removeLike(Like like) {
+        likes.remove(like);
+        like.setProduct(null);
     }
 
     /**
-     * To get tht product Price
-     * @return price
+     * To add an orderProduct
+     * @param orderProduct
      */
-    public double getPrice() {
-        return price;
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
+        orderProduct.setProduct(this);
     }
 
     /**
-     * To get tht product Quantity
-     * @return quantity
+     * To remove an orderProduct
+     * @param orderProduct
      */
-    public int getQuantity() {
-        return quantity;
-    }
-
-    /**
-     * To set the product Id
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * To set the product Name
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * To set the product Price
-     * @param price
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    /**
-     * To set the product Quantity
-     * @param quantity
-     */
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void removeOrderProduct(OrderProduct orderProduct) {
+        orderProducts.remove(orderProduct);
+        orderProduct.setProduct(null);
     }
 }

@@ -11,7 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "category")
 public class Category {
@@ -28,37 +32,5 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProduct = new ArrayList<>();
-
-    /**
-     * To get the category Id
-     * @return id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * To get the category Name
-     * @return name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * To set the category Id
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * To set the category Name
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

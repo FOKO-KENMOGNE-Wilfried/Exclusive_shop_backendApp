@@ -9,7 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -34,37 +38,5 @@ public class Order {
 
     @Column(nullable = false)
     private boolean isValidated;
-
-    public Long getId() {
-        return id;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public boolean getIsValidate() {
-        return isValidated;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setIsValidate(boolean isValidated) {
-        this.isValidated = isValidated;
-    }
 
 }
