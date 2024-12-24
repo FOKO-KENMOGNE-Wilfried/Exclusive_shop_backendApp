@@ -1,28 +1,41 @@
 package com.exclusive.exclusive.entity;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+// import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Entity
-public class User {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "users")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     @Size(max = 50)
@@ -32,17 +45,17 @@ public class User {
     private String surname;
 
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
+    private List<ProductsLike> likes;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'CLIENT'")
-    private String role = "CLIENT";
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(nullable = false, unique = true)
     @Email
     private String email;
 
     @Column(nullable = false)
-    @Size(min = 8)
     private String password;
 
     // utilities methods
@@ -51,7 +64,7 @@ public class User {
      * To add a like
      * @param like
      */
-    public void addLike(Like like) {
+    public void addLike(ProductsLike like) {
         likes.add(like);
         like.setUser(this);
     }
@@ -60,9 +73,44 @@ public class User {
      * To remove a like
      * @param like
      */
-    public void removeLike(Like like) {
+    public void removeLike(ProductsLike like) {
         likes.remove(like);
         like.setUser(null);
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    // @Override
+    // public String getPassword() {
+    //     return password;
+    // }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
 }

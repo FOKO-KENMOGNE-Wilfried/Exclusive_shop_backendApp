@@ -1,4 +1,4 @@
-package com.exclusive.exclusive.service;
+package com.exclusive.exclusive.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.exclusive.exclusive.entity.Product;
 import com.exclusive.exclusive.repository.ProductRepository;
+import com.exclusive.exclusive.service.IProductService;
 
 /**
  * Service class for managing Product entities.
  */
 @Service
-public class ProductService {
+public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
 

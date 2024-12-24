@@ -2,6 +2,8 @@ package com.exclusive.exclusive.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,24 +20,44 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
-    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderProduct> orderProducts = new ArrayList<>();
+    @Column(nullable = false)
+    private String description;
 
     @Column(nullable = false)
     private double price;
 
     @Column(nullable = false)
-    private double rate;
+    private String image;
+
+    @Column(nullable = false)
+    private double review;
+
+    @Column(nullable = false)
+    private double promotionPrice;
+
+    @Column(nullable = false)
+    private double reviewNumber;
 
     @Column(nullable = false)
     private int quantity;
+
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductOptions> options = new ArrayList<>();
+
+    // @ManyToOne
+    // @JoinColumn(name = "category_id", nullable = false)
+    // private Category category;
+
+    @Column(nullable = false)
+    // @JoinColumn(name = "category_id", nullable = false)
+    private Integer category_id;
+
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductsLike> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     // utilities methods
 
@@ -43,7 +65,7 @@ public class Product {
      * To add a like
      * @param like
      */
-     public void addLike(Like like) {
+     public void addLike(ProductsLike like) {
         likes.add(like);
         like.setProduct(this);
     }
@@ -52,7 +74,7 @@ public class Product {
      * To remove a like
      * @param like
      */
-    public void removeLike(Like like) {
+    public void removeLike(ProductsLike like) {
         likes.remove(like);
         like.setProduct(null);
     }

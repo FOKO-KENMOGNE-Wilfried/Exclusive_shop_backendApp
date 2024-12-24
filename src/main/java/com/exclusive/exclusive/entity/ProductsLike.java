@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Like {
+public class ProductsLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
