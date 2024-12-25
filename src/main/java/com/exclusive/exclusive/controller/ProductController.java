@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exclusive.dao.response.AddProductResponse;
+import com.exclusive.dao.response.StringResponse;
 import com.exclusive.exclusive.entity.Product;
 import com.exclusive.exclusive.service.IProductService;
 
@@ -35,9 +37,12 @@ public class ProductController {
      * @return the ResponseEntity with status 200 (ok) and with body of the new  product
      */
     @PostMapping("/product")
-    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
+    public ResponseEntity<AddProductResponse> saveProduct(@RequestBody Product product){
         Product newProduct = iProductService.saveProduct(product);
-        return ResponseEntity.ok(newProduct);
+        AddProductResponse addProductResponse = new AddProductResponse();
+        addProductResponse.setProduct(newProduct);
+        addProductResponse.setMessage("Product create Successful !");
+        return ResponseEntity.ok(addProductResponse);
     }
 
     /**
@@ -84,8 +89,10 @@ public class ProductController {
      * and with body of the message "Product deleted successfully"
      */
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<StringResponse> deleteProduct(@PathVariable Long id){
         iProductService.deleteProduct(id);
-        return ResponseEntity.ok("Product deleted successfully");
+        StringResponse stringResponse = new StringResponse();
+        stringResponse.setResponse("Product deleted successfully");
+        return ResponseEntity.ok(stringResponse);
     }
 }

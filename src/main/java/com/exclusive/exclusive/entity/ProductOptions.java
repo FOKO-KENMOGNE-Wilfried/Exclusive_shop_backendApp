@@ -34,7 +34,11 @@ public class ProductOptions {
 
   @OneToMany(mappedBy = "productOptions", orphanRemoval = true)
   @JsonManagedReference
-  private List<ProductOptionsImages> productOptionsImages = new ArrayList<>();
+  private List<ProductOptionsImages> imagesUrl = new ArrayList<>();
+
+  @OneToMany(mappedBy = "productOptions", orphanRemoval = true)
+  @JsonManagedReference
+  private List<ProductOptionsSize> sizes = new ArrayList<>();
 
   // @Column(nullable = false)
   // private String image;

@@ -12,11 +12,10 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Entity
-public class ProductOptionsImages {
+public class ProductOptionsSize {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +27,6 @@ public class ProductOptionsImages {
   private ProductOptions productOptions;
 
   @Column(nullable = false)
-  private String imageUrl;
+  private String size;
 
 }
