@@ -46,8 +46,8 @@ public class ProductOptions {
   @Column(nullable = true)
   private String color;
 
-  @Column(nullable = true)
-  private String size;
+  // @Column(nullable = true)
+  // private String size;
 
   // @Column(nullable = false)
   // private ProductOptionsImages imagesUrl;

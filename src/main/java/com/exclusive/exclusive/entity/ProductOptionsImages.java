@@ -27,7 +27,7 @@ public class ProductOptionsImages {
   @JsonBackReference
   private ProductOptions productOptions;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String imageUrl;
 
 }
