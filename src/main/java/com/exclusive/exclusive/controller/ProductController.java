@@ -33,8 +33,8 @@ public class ProductController {
     /**
      * Create a new product
      *
-     * @param product the prisuct to create
-     * @return the ResponseEntity with status 200 (ok) and with body of the new  product
+     * @param product the product to create
+     * @return the ResponseEntity with status 200 (ok) and with body of the new product
      */
     @PostMapping("/product")
     public ResponseEntity<AddProductResponse> saveProduct(@RequestBody Product product){
@@ -75,7 +75,7 @@ public class ProductController {
      * @return the ResponseEntity with status 200 (ok) and with body of the product
      * updated product, or withe 404 (Not Found) if the product does not exist
      */
-    @PutMapping("/products/{id}")
+    @PutMapping("/product/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product){
         Product updatedProduct = iProductService.updateProduct(id, product);
         return ResponseEntity.ok(updatedProduct);
@@ -88,7 +88,7 @@ public class ProductController {
      * @return the ResponseEntity with status 200 (ok)
      * and with body of the message "Product deleted successfully"
      */
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<StringResponse> deleteProduct(@PathVariable Long id){
         iProductService.deleteProduct(id);
         StringResponse stringResponse = new StringResponse();

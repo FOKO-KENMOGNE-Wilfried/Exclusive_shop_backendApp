@@ -7,7 +7,7 @@ import java.util.Optional;
 import com.exclusive.exclusive.entity.Product;
 
 /**
- * Service class for managing Product entities.
+ * Service interface for managing Product entities.
  */
 public interface IProductService {
 
@@ -18,6 +18,7 @@ public interface IProductService {
      * @return the persisted entity
      */
     public Product saveProduct(Product product);
+
     /**
      * Get all products.
      * 

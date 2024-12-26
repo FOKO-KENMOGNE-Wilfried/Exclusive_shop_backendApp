@@ -28,6 +28,9 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = true)
+    private String image;
+
     // @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     // private List<Product> products = new ArrayList<>();
 
