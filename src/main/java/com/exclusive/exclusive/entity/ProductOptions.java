@@ -27,11 +27,6 @@ public class ProductOptions {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(cascade = CascadeType.ALL, optional = false)
-  @JoinColumn(name = "product_id")
-  @JsonBackReference
-  private Product product;
-
   @OneToMany(mappedBy = "productOptions", orphanRemoval = true)
   @JsonManagedReference
   private List<ProductOptionsImages> imagesUrl = new ArrayList<>();
@@ -40,16 +35,15 @@ public class ProductOptions {
   @JsonManagedReference
   private List<ProductOptionsSize> sizes = new ArrayList<>();
 
-  // @Column(nullable = false)
-  // private String image;
+  @ManyToOne(cascade = CascadeType.ALL, optional = false)
+  @JoinColumn(name = "product_id")
+  @JsonBackReference
+  private Product product;
 
   @Column(nullable = true)
   private String color;
 
   // @Column(nullable = true)
   // private String size;
-
-  // @Column(nullable = false)
-  // private ProductOptionsImages imagesUrl;
 
 }

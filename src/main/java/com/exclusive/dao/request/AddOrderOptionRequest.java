@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductOptionSizeRequest {
-  private String productOptionsSize;
-  private Long productOptionId;
+public class AddOrderOptionRequest {
+  private Long orderId;
+  private Long productId;
+  private Integer quantity;
 }

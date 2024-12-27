@@ -2,6 +2,7 @@ package com.exclusive.exclusive.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -57,6 +58,7 @@ public class Product {
     private List<ProductsLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
     // utilities methods
@@ -85,7 +87,7 @@ public class Product {
      */
     public void addOrderProduct(OrderProduct orderProduct) {
         orderProducts.add(orderProduct);
-        orderProduct.setProduct(this);
+        // orderProduct.setProduct(this);
     }
 
     /**
@@ -94,6 +96,6 @@ public class Product {
      */
     public void removeOrderProduct(OrderProduct orderProduct) {
         orderProducts.remove(orderProduct);
-        orderProduct.setProduct(null);
+        // orderProduct.setProduct(null);
     }
 }

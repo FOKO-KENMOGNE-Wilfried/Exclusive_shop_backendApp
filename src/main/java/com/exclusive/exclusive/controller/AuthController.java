@@ -1,5 +1,7 @@
 package com.exclusive.exclusive.controller;
 
+import java.util.List;
+
 // import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exclusive.dao.request.SignUpRequest;
 import com.exclusive.dao.request.SigninRequest;
 import com.exclusive.dao.response.JwtAuthenticationResponse;
+import com.exclusive.exclusive.entity.Order;
+import com.exclusive.exclusive.entity.User;
+import com.exclusive.exclusive.repository.UserRepository;
 import com.exclusive.exclusive.service.IAuthenticationService;
+import com.exclusive.exclusive.service.IOrderService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 public final class AuthController {
 
     private final IAuthenticationService authenticationService;
+    private final IOrderService iOrderService;
+    private final UserRepository userRepository;
+
+    // @Autowired
+    // AuthController() {}
 
     @PostMapping("/register")
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
@@ -28,7 +39,22 @@ public final class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
-        return ResponseEntity.ok(authenticationService.signin(request));
+        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
+
+        User autheUser = userRepository.findByEmail(request.getEmail()).get();
+        System.out.println(autheUser.getId());
+        List<Order> order = iOrderService.getOrderByUserId(autheUser.getId());
+        System.out.println(order.isEmpty());
+        System.out.println(order.size());
+        if (order.isEmpty()) {
+            Order newOrder = new Order();
+            newOrder.setUser(autheUser);
+            newOrder.setOrder(false);
+            newOrder.setValidated(false);
+            iOrderService.AddOrder(newOrder);
+        }
+
+        return ResponseEntity.ok(jwtAuthenticationResponse);
     }
 
 }

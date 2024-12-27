@@ -1,6 +1,7 @@
 package com.exclusive.exclusive.entity;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,12 @@ public class OrderProduct {
     // @JoinColumn(name = "user_id")
     // private User userId;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id")
+    @JsonBackReference
+    private Order order;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -32,8 +38,8 @@ public class OrderProduct {
     // @JoinColumn(name = "category_id")
     // private Category category;
 
-    @Column(nullable = false)
-    private double price;
+    // @Column(nullable = false)
+    // private double price;
 
     @Column(nullable = false)
     private int quantity;

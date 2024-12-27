@@ -26,6 +26,7 @@ import com.exclusive.exclusive.entity.ProductOptions;
 import com.exclusive.exclusive.entity.ProductOptionsImages;
 import com.exclusive.exclusive.entity.ProductOptionsSize;
 import com.exclusive.exclusive.repository.ProductOptionRepository;
+import com.exclusive.exclusive.repository.ProductRepository;
 import com.exclusive.exclusive.service.IProductService;
 
 @RestController
@@ -35,12 +36,15 @@ public class ProductController {
     private final IProductService iProductService;
     private final ImageUploadController imageUploadController;
     private final ProductOptionRepository productOptionRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductController(IProductService iProductService, ImageUploadController imageUploadController, ProductOptionRepository productOptionRepository) {
+    public ProductController(IProductService iProductService, ImageUploadController imageUploadController,
+            ProductOptionRepository productOptionRepository, ProductRepository productRepository) {
         this.iProductService = iProductService;
         this.imageUploadController = imageUploadController;
         this.productOptionRepository = productOptionRepository;
+        this.productRepository = productRepository;
     }
 
     /**
@@ -66,24 +70,41 @@ public class ProductController {
      * @return the ResponseEntity with status 200 (ok) and with body of the new
      *         productOption
      */
-    @PostMapping("/addProductOption")
-    public ResponseEntity<String> addProductOption(@RequestBody ProductOptions productOptions) {
-        iProductService.addOption(productOptions);
-        return ResponseEntity.ok("Product Option create Successful");
+    @PostMapping("/addProductOption/{productId}")
+    public ResponseEntity<String> addProductOption(@RequestBody ProductOptions productOptions,
+    @PathVariable Long productId) {
+
+        ProductOptions newProductOptions = new ProductOptions();
+
+        try {
+
+            // Get the prooductOption into the database
+            Product product = productRepository.findById(productId).get();
+            if (product == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product option not found");
+            }
+
+            newProductOptions.setProduct(product);
+            newProductOptions.setColor(productOptions.getColor());
+            iProductService.addOption(newProductOptions);
+            return ResponseEntity.ok("Product Option create Successful");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add product option image");
+        }
     }
 
     /**
      * Add a new productOptionImage
      *
      * @param productOptionId the id of the productOption
-     * @param file the image of the productOption to add
+     * @param file            the image of the productOption to add
      * @return the ResponseEntity with status 200 (ok) and with body of the new
      *         productOptionImage
      */
     @PostMapping("/addProductOptionImage")
     public ResponseEntity<AddProductOptionImageResponse> addProductOptionImage(
-            @RequestParam("productOptionId") Long productOptionId,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("productOptionId") Long productOptionId, @RequestParam("file") MultipartFile file) {
 
         try {
             // Get the prooductOption into the database
@@ -125,15 +146,14 @@ public class ProductController {
      *         productOptionSize
      */
     @PostMapping("/addProductOptionSize")
-    public ResponseEntity<String> addProductOptionSize(@RequestBody AddProductOptionSizeRequest productOptionsSizeRequest) {
+    public ResponseEntity<String> addProductOptionSize(
+            @RequestBody AddProductOptionSizeRequest productOptionsSizeRequest) {
 
         // Get the prooductOption into the database
-        System.out.println("----------------------------");
-        System.out.println(productOptionsSizeRequest.getProductOptionsSize());
-        ProductOptions productOption = productOptionRepository.findById(productOptionsSizeRequest.getProductOptionId()).get();
+        ProductOptions productOption = productOptionRepository.findById(productOptionsSizeRequest.getProductOptionId())
+                .get();
         if (productOption == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Product option not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product option not found");
         }
 
         ProductOptionsSize productOptionsSize = new ProductOptionsSize();

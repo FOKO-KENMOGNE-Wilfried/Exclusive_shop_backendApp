@@ -51,6 +51,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = true)
+    private String profile;
+
     @Column(nullable = false, unique = true)
     @Email
     private String email;

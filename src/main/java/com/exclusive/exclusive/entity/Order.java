@@ -1,5 +1,11 @@
 package com.exclusive.exclusive.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,7 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,21 +29,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "order_product_id")
-    private OrderProduct orderProduct;
+    @OneToMany(mappedBy = "order" ,cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<OrderProduct> orderProduct = new ArrayList<>();
+
+    // @Column(nullable = false)
+    // private double totalPrice;
+
+    // @Column(nullable = false)
+    // private int quantity;
 
     @Column(nullable = false)
-    private double totalPrice;
+    private boolean isValidated = false;
 
     @Column(nullable = false)
-    private int quantity;
-
-    @Column(nullable = false)
-    private boolean isValidated;
+    private boolean isOrder = false;
 
 }
