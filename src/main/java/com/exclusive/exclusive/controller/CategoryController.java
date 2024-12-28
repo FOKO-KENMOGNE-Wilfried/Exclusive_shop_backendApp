@@ -12,21 +12,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.exclusive.dao.response.StringResponse;
 import com.exclusive.exclusive.entity.Category;
 import com.exclusive.exclusive.service.ICategoryService;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/category")
 public class CategoryController {
 
-  private ICategoryService iCategoryService;
+  private final ICategoryService iCategoryService;
+  private final ImageUploadController imageUploadController;
 
   @Autowired
-  public CategoryController(ICategoryService iCategoryService) {
+  public CategoryController(ICategoryService iCategoryService, ImageUploadController imageUploadController) {
     this.iCategoryService = iCategoryService;
+    this.imageUploadController = imageUploadController;
   }
 
   /**
@@ -35,10 +39,16 @@ public class CategoryController {
    * @param category the category to create
    * @return the ResponseEntity with status 200 (ok) and with body of the new category
    */
-  @PostMapping("/category")
-  public ResponseEntity<Category> addCategory(@RequestBody Category category) {
-    Category newCategory = iCategoryService.addCategory(category);
-    return ResponseEntity.ok(newCategory);
+  @PostMapping("/addCategory")
+  public ResponseEntity<Category> addCategory(@RequestParam("name") String name, @RequestParam("image") MultipartFile file) {
+
+    String filePath = imageUploadController.uploadImage(file);
+
+    Category newCategory = new Category();
+    newCategory.setName(name);
+    newCategory.setImage(filePath);
+    Category savedCategory = iCategoryService.addCategory(newCategory);
+    return ResponseEntity.ok(savedCategory);
   }
 
   /**

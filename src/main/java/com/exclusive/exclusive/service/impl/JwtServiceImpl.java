@@ -45,9 +45,10 @@ public class JwtServiceImpl implements IJwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        long expirationTimeMs = 86400000;
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 

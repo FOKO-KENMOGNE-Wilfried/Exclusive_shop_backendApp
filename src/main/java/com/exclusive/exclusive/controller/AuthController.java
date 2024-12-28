@@ -41,18 +41,24 @@ public final class AuthController {
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
         JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signin(request);
 
+        Long cartId;
+        Long userId;
+
         User autheUser = userRepository.findByEmail(request.getEmail()).get();
         System.out.println(autheUser.getId());
         List<Order> order = iOrderService.getOrderByUserId(autheUser.getId());
-        System.out.println(order.isEmpty());
-        System.out.println(order.size());
+        cartId = order.get(0).getId();
+
         if (order.isEmpty()) {
             Order newOrder = new Order();
             newOrder.setUser(autheUser);
             newOrder.setOrder(false);
             newOrder.setValidated(false);
             iOrderService.AddOrder(newOrder);
+            cartId = newOrder.getId();
         }
+
+        jwtAuthenticationResponse.setCartId(cartId);
 
         return ResponseEntity.ok(jwtAuthenticationResponse);
     }
